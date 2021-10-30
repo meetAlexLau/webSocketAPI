@@ -33,6 +33,12 @@ io.on('connection', (socket) => {
     })
 
     mongoose.connect(CONNECTION_URL, { useNewUrlparser: true, useUnifiedTopology: true })
+    .then(() => {
+      console.log("Local Database Connected");
+    }, error => {
+      console.log(error);
+      console.log("Local Database Error Connection");
+    });
 
     let newUser = new User({ name: socket.id, location: "Place" })
     newUser.save()

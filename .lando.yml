@@ -1,0 +1,14 @@
+name: websocketapilando
+recipe: lamp
+config:
+  webroot: .
+services:
+ mongoservice:
+   type: mongo
+   portforward: true
+ nodeservice:
+   type: node
+   build:
+    - npm install
+   command: npm start server.js
+   port: 5000
