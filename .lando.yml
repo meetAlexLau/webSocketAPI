@@ -1,14 +1,17 @@
-name: websocketapilando
-recipe: lamp
-config:
-  webroot: .
+name: lando-node-server
 services:
- mongoservice:
-   type: mongo
-   portforward: true
- nodeservice:
-   type: node
-   build:
-    - npm install
-   command: npm start server.js
-   port: 5000
+  http:
+    type: node:12
+    build:
+      - yarn
+    command: /app/node_modules/.bin/nodemon src/index.js --watch src --ignore *.test.js
+  # https:
+  #   type: node:12
+  #   ssl: true
+  #   port: 3000
+  #   build:
+  #     - yarn
+  #   command: /app/node_modules/.bin/nodemon src/index-https.js --watch src --ignore *.test.js
+  mongoservice:
+    type: mongo
+    portforward: true

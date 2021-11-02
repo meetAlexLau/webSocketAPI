@@ -1,13 +1,18 @@
 const express = require('express');
+const fs = require('fs');
 const http = require('http');
+const https = require('https');
 const { Server } = require("socket.io");
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const User = require('./UserSchema');
 
+
+const key = fs.readFileSync('/certs/cert.key');
+const cert = fs.readFileSync('/certs/cert.crt');
 const app = express();
-const server = http.createServer(app);
+const server = https.createServer({key, cert}, app);
 const io = new Server(server);
 
 app.use(bodyParser.json({limit: "30mb", extended: true }))
@@ -17,7 +22,7 @@ app.use(cors())
 const users = {};
 
 const CONNECTION_URL = 'mongodb+srv://timhsu:7xvPjvAEI3jMuhhf@users.xnee2.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 443;
 const MONGOOSE_PORT = 5001
 
 app.get('/', (req, res) => {
@@ -49,5 +54,6 @@ io.on('connection', (socket) => {
 
 
 server.listen(PORT, () => {
-  console.log('listening on PORT:5000');
+  console.log(`listening on PORT:${PORT}`);
 });
+http.createServer(app).listen(80);
